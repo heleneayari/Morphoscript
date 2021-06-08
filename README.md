@@ -1,7 +1,7 @@
 About
 =====
 
-Stripy stripes analyze the organization level of sarcomeres in cardiomyocytes and measure their local orientation, spacings.
+Morphoscripts analyzes the organization level of sarcomeres in cardiomyocytes and measure their local orientation, spacings.
 It is developped as a matlab application.
 A python jupyter notebook is also available for explaining the main concepts used by the software.
 It should work for version of matlab 2017a or higher.
