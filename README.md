@@ -5,6 +5,8 @@ Morphoscript analyzes the organization level of sarcomeres in cardiomyocytes and
 It is developped as a matlab application.
 A python jupyter notebook is also available for explaining the main concepts used by the software.
 It should work for version of matlab 2017a or higher.
+More details could be found in our article:
+https://doi.org/10.1093/bioinformatics/btab400
 
 
 Install
@@ -58,6 +60,9 @@ This menu is used for measuring geometric parameters of the cell characterizing 
 + Ellipse, which will show the ellipse with the same second moment as the cell's mask
 
 The original button enables to go back to the bare display of the cell of interest. The save button will save the results.
+Data are saved to disk in a file named '*_maski_ShapeAnalysis.mat', where '*' represents the name of your image, i will be the cell number on your image.
+In this mat file, you will get the following variables:
+{'MaskPixels','OtsuPixels','MaskMicrons','OtsuMicrons','Coverage','MeanImageIntensity','MaxImageIntensity','MeanProteinIntensity','Compactness,'Roundness','Rectangularity','Elongation','Ellipsoidal','Eccentricity', 'MeanBackCellintensity'}
 
 ## Fourier Analysis
 
