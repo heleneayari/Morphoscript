@@ -27,11 +27,11 @@ function varargout = FourierAnalysis(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @FourierAnalysis_OpeningFcn, ...
-                   'gui_OutputFcn',  @FourierAnalysis_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @FourierAnalysis_OpeningFcn, ...
+    'gui_OutputFcn',  @FourierAnalysis_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -79,7 +79,7 @@ set(handles.popupmenu1,'Value',2);
 handles.imo = double(imread(handles.ImageFileName));
 
 if size(handles.imo, 3) > 1
-    handles.img = handles.imo(:, :, 2);   
+    handles.img = handles.imo(:, :, 2);
 else
     handles.img = handles.imo;
 end
@@ -91,17 +91,18 @@ end
 handles.Mask = mask;
 handles.Image = handles.img;
 handles.Image(~mask) = 0;
+
 if handles.sc==0
-
+    
     info=imfinfo([handles.ImageFileName]);
-dd='Enter the pixel size  in \mum';
-
+    dd='Enter the pixel size  in \mum';
+    
     if isempty(info.XResolution)
         aa.Interpreter='tex';
         x = inputdlg(dd,'PixelSize',1,{'1'},aa);
-handles.sc=str2double(x{1});
+        handles.sc=str2double(x{1});
     else
-handles.sc=1/info.XResolution;
+        handles.sc=1/info.XResolution;
     end
 elseif handles.sc==1
     set(handles.popupmenu1,'Value',1);
@@ -126,21 +127,21 @@ guidata(hObject, handles);
 
 if strcmp(handles.Mode,'Auto')
     pushbutton_RunModel_Callback(hObject, eventdata,handles) ;
-%     handles.closeFigure = true;
+    %     handles.closeFigure = true;
     handles=guidata(hObject);
-
+    
     
     pushbutton_save_Callback(hObject,eventdata,handles) ;
 else
     set(handles.pushbutton_save, 'Enable','off');
     if isfield(handles,'h')
-    set(handles.h,'color','r')
-    figure(handles.h)
-    uiwait(handles.h)
+        set(handles.h,'color','r')
+        figure(handles.h)
+        uiwait(handles.h)
     end
-guidata(hObject, handles);
-uiwait(handles.figure1);
-
+    guidata(hObject, handles);
+    uiwait(handles.figure1);
+    
 end
 
 
@@ -149,12 +150,11 @@ end
 % uiwait(handles.figure1);
 
 
-function varargout = FourierAnalysis_OutputFcn(hObject, eventdata, handles) 
+function varargout = FourierAnalysis_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
-isfield(handles,'h')
 
 if (isfield(handles,'closeFigure') && handles.closeFigure)
-   figure1_CloseRequestFcn(hObject, eventdata, handles)
+    figure1_CloseRequestFcn(hObject, eventdata, handles)
 end
 
 function figure1_CloseRequestFcn(hObject, ~, ~)
@@ -173,8 +173,8 @@ if isnan(handles.ws)
     return
 else
     
-handles.WindowSize = round(handles.ws/handles.sc) + ~bitget(abs(round(handles.ws/handles.sc)),1);
-
+    handles.WindowSize = round(handles.ws/handles.sc) + ~bitget(abs(round(handles.ws/handles.sc)),1);
+    
 end
 handles = makeGrid(handles);
 guidata(hObject, handles);
@@ -192,11 +192,11 @@ if isnan(handles.sc)
     uicontrol(hObject)
     return
 else
-
-handles.WindowSize = round(handles.ws/handles.sc) + ~bitget(abs(round(handles.ws/handles.sc)),1);
-
- 
-   handles = makeGrid(handles);
+    
+    handles.WindowSize = round(handles.ws/handles.sc) + ~bitget(abs(round(handles.ws/handles.sc)),1);
+    
+    
+    handles = makeGrid(handles);
 end
 guidata(hObject, handles);
 
@@ -246,8 +246,8 @@ else
     handles.Threshold = input;
 end
 if isfield(handles,'WavelengthAmplitude')
-handles = displayAngles(handles);
-handles = calculateHistogram(handles);
+    handles = displayAngles(handles);
+    handles = calculateHistogram(handles);
 end
 guidata(hObject, handles);
 
@@ -265,7 +265,7 @@ for w = 1 : length(handles.X(:))
     loc = regexp(handles.MaskFileName, '\.');
     SaveName = [handles.MaskFileName(length(handles.SaveDir)+8:loc(end) - 1) '_' num2str(w)]; %not great programming
     [hfft, fft2D] = GUIfft2D(imc, 'SaveDir', handles.ResDir, 'SaveName', SaveName, 'Mode', 'Auto','Resolution',[handles.sc handles.sc]);
-  
+    
     handles.Wavelength(w) = fft2D.OrthogonalWavelength;
     handles.Angle(w) = fft2D.MainAngle;
     handles.WavelengthAmplitude(w) = fft2D.OrthogonalWavelengthAmplitude;
@@ -295,7 +295,7 @@ for w = 1 : length(handles.X(:))
         handles.l(w) = line([handles.X(w) - dl/2 * cos(fft2D.MainAngle), handles.X(w) + dl/2 * cos(fft2D.MainAngle)], [handles.Y(w) - dl/2 * sin(fft2D.MainAngle), handles.Y(w) + dl/2 * sin(fft2D.MainAngle)], 'Color', [1 0 1], 'LineStyle', '-', 'LineWidth', 2, 'Parent', handles.axes);
     else
         handles.l(w) = line([handles.X(w) - dl/2 * cos(fft2D.MainAngle), handles.X(w) + dl/2 * cos(fft2D.MainAngle)], [handles.Y(w) - dl/2 * sin(fft2D.MainAngle), handles.Y(w) + dl/2 * sin(fft2D.MainAngle)], 'Color', [1 0 1], 'LineStyle', ':', 'LineWidth', 2, 'Parent', handles.axes);
-    end 
+    end
     clear g;
 end
 handles = calculateHistogram(handles);
@@ -312,28 +312,28 @@ imc = handles.Image(handles.Y(ind) - (handles.WindowSize - 1)/2 : handles.Y(ind)
 loc = regexp(handles.MaskFileName, '\.');
 SaveName = [handles.MaskFileName(length(handles.SaveDir)+8:loc(end) - 1) '_' num2str(ind)]; %not great programming
 [~, fft2D] = GUIfft2D(imc, 'SaveDir', handles.ResDir, 'SaveName', SaveName, 'Mode', 'Hand','Resolution',[handles.sc handles.sc]);
- if isfield(fft2D, 'cancel') %to make sure we don't get an error after the cancel button is pushed
-   delete(r);
-   clear g;
+if isfield(fft2D, 'cancel') %to make sure we don't get an error after the cancel button is pushed
+    delete(r);
+    clear g;
     return
- end
-  if isfield(fft2D, 'out') % for not good results
-   handles.WavelengthAmplitude(ind) =0;
-   delete(r);
-   clear g;
-   handles = calculateHistogram(handles);
-   handles = displayAngles(handles);
-   set(handles.pushbutton_save, 'Enable','on');
-   guidata(hObject, handles)
+end
+if isfield(fft2D, 'out') % for not good results
+    handles.WavelengthAmplitude(ind) =0;
+    delete(r);
+    clear g;
+    handles = calculateHistogram(handles);
+    handles = displayAngles(handles);
+    set(handles.pushbutton_save, 'Enable','on');
+    guidata(hObject, handles)
     return
- end
+end
 
 handles.Wavelength(ind) = fft2D.OrthogonalWavelength;
 handles.Angle(ind) = fft2D.MainAngle;
 if fft2D.OrthogonalWavelengthAmplitude<handles.Threshold
     handles.WavelengthAmplitude(ind)=100;
 else
-handles.WavelengthAmplitude(ind) = fft2D.OrthogonalWavelengthAmplitude;
+    handles.WavelengthAmplitude(ind) = fft2D.OrthogonalWavelengthAmplitude;
 end
 
 delete(r);
@@ -344,7 +344,7 @@ set(handles.pushbutton_save, 'Enable','on');
 guidata(hObject, handles)
 
 function pushbutton_RunModel_Callback(hObject, ~, handles)
-oldpointer = get(handles.figure1, 'pointer'); 
+oldpointer = get(handles.figure1, 'pointer');
 set(handles.figure1, 'pointer', 'watch');
 drawnow;
 
@@ -369,7 +369,7 @@ end
 handles = calculateHistogram(handles);
 
 handles = displayAngles(handles);
- set(handles.figure1, 'pointer', oldpointer);
+set(handles.figure1, 'pointer', oldpointer);
 set(handles.pushbutton_save, 'Enable','on');
 guidata(hObject, handles)
 
@@ -420,31 +420,31 @@ Y(~b) = [];
 plot(X, Y, 'm.', 'MarkerSize', 10, 'parent', handles.axes);
 
 if isempty(X)&&isempty(Y)
-
-   handles.h=msgbox('No window size fits in the next mask if you absolutely want to include this mask please consider using a smaller window size','problem');
-
-   %uialert(handles.figure1,'No window size fits in the mask if you absolutely want to include this mask please consider using a smaller window size','problem');
-
+    
+    handles.h=msgbox('No window size fits in the next mask if you absolutely want to include this mask please consider using a smaller window size','problem');
+    
+    %uialert(handles.figure1,'No window size fits in the mask if you absolutely want to include this mask please consider using a smaller window size','problem');
+    
 else
     set(handles.axes, 'Xlim', [min(X(:)) - handles.WindowSize   max(X(:)) + handles.WindowSize]);
-set(handles.axes, 'Ylim', [min(Y(:)) - handles.WindowSize max(Y(:)) + handles.WindowSize]);
-cmap =[  0    0.4470    0.7410
-    0.8500    0.3250    0.0980
-    0.9290    0.6940    0.1250
-    0.4940    0.1840    0.5560
-    0.4660    0.6740    0.1880
-    0.3010    0.7450    0.9330
-    0.6350    0.0780    0.1840];
-vis = {'on', 'off', 'off', 'off'};
-for w = 1 : length(X(:))
-   handles.r(w) = rectangle('Position', [X(w) - (handles.WindowSize - 1)/2, Y(w) - (handles.WindowSize - 1)/2, handles.WindowSize, handles.WindowSize], 'EdgeColor', cmap(mod(w,size(cmap,1))+1,:), 'LineWidth', 2, 'parent', handles.axes);
-   handles.r(w).EdgeColor(4) = rand(1)/2 + 0.5;
-   %rect([X(w) - handles.WindowSize/2, Y(w) - handles.WindowSize/2, handles.WindowSize, handles.WindowSize],'Color', cmap(mod(w,size(cmap,1))+1,:), 'Alpha', rand(1), 'LineWidth', 2,'parent',handles.axes);
-end
-hold(handles.axes,'off');
-handles.X = X;
-handles.Y = Y;
-
+    set(handles.axes, 'Ylim', [min(Y(:)) - handles.WindowSize max(Y(:)) + handles.WindowSize]);
+    cmap =[  0    0.4470    0.7410
+        0.8500    0.3250    0.0980
+        0.9290    0.6940    0.1250
+        0.4940    0.1840    0.5560
+        0.4660    0.6740    0.1880
+        0.3010    0.7450    0.9330
+        0.6350    0.0780    0.1840];
+    vis = {'on', 'off', 'off', 'off'};
+    for w = 1 : length(X(:))
+        handles.r(w) = rectangle('Position', [X(w) - (handles.WindowSize - 1)/2, Y(w) - (handles.WindowSize - 1)/2, handles.WindowSize, handles.WindowSize], 'EdgeColor', cmap(mod(w,size(cmap,1))+1,:), 'LineWidth', 2, 'parent', handles.axes);
+        handles.r(w).EdgeColor(4) = rand(1)/2 + 0.5;
+        %rect([X(w) - handles.WindowSize/2, Y(w) - handles.WindowSize/2, handles.WindowSize, handles.WindowSize],'Color', cmap(mod(w,size(cmap,1))+1,:), 'Alpha', rand(1), 'LineWidth', 2,'parent',handles.axes);
+    end
+    hold(handles.axes,'off');
+    handles.X = X;
+    handles.Y = Y;
+    
 end
 
 
@@ -472,7 +472,7 @@ teller = 0;
 handles.Angles=[];
 tempw=[];
 for w = 1 : length(handles.X(:))
-
+    
     if handles.WavelengthAmplitude(w) > handles.Threshold
         teller = teller + 1;
         handles.Angles(teller) = handles.Angle(w);
@@ -486,9 +486,9 @@ handles.Order = teller/length(handles.X(:));
 
 handles.Wavelengthmed=nanmedian(tempw);
 handles.Wavelengthmean=nanmean(tempw);
- handles.angles2 = mod(handles.Angles - (edges(hi+1) + edges(hi))/2 + pi/2, pi);
+handles.angles2 = mod(handles.Angles - (edges(hi+1) + edges(hi))/2 + pi/2, pi);
 
- handles.Distribution=std(handles.angles2);
+handles.Distribution=std(handles.angles2);
 
 %handles.Angles90 = mod(handles.Angles, pi/2);
 %handles.Distribution90 = std(handles.Angles90);
@@ -501,8 +501,8 @@ function handles = saveHistogram(handles)
 fr = figure;
 
 polarhistogram(handles.angles2,17);
- ax = gca;
- ax.ThetaLim = [0 180];
+ax = gca;
+ax.ThetaLim = [0 180];
 loc = regexp(handles.MaskFileName, '\.');
 SaveName = handles.MaskFileName(length(handles.SaveDir)+8:loc(end) - 1); %not great programming
 %hgexport(fr, [handles.ResDir SaveName '_Histogram.eps'], hgexport('factorystyle'),'Format','eps');
@@ -518,7 +518,7 @@ close
 % [~, hi] = max(h.BinCounts);
 % ax = gca;
 % ax.ThetaLim = [0 180];
-% 
+%
 % angles2 = mod(handles.Angles90 - (h.BinEdges(hi+1) + h.BinEdges(hi))/2 + pi/2, pi);
 % polarhistogram(angles2, 9);
 % ax = gca;
@@ -527,7 +527,7 @@ close
 % SaveName = handles.MaskFileName(length(handles.SaveDir)+8:loc(end) - 1); %not great programming
 % %hgexport(fr, [handles.ResDir SaveName '_Histogram90.eps'], hgexport('factorystyle'),'Format','eps');
 % hgexport(fr, [handles.ResDir SaveName '_Histogram90.png'], hgexport('factorystyle'),'Format','png');
- %close(fr);
+%close(fr);
 
 
 
@@ -538,9 +538,11 @@ function pushbutton_next_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_next (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
- handles.closeFigure = true;
-    uiresume(handles.figure1);
-    guidata(hObject, handles);
+
+handles.closeFigure = true;
+uiresume(handles.figure1);
+
+guidata(hObject, handles);
 
 
 

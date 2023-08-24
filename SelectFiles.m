@@ -111,7 +111,7 @@ if ~A
        B=1;
    end
 end
-if A|B
+if A||B
 handles.startdir = pathname;
 handles.filenames = [handles.filenames filenames];
 if A
@@ -166,11 +166,13 @@ for i = 1 : length(handles.ImageFileName)
     if length(handles.sc)>1
     FourierAnalysis('ImageFileName', handles.ImageFileName{i}, 'MaskFileName', handles.MaskFileName{i}, 'SaveDir', handles.savedir,'Scale',handles.sc(i),...
         'Threshold',handles.Threshold,'WindowSize',handles.WindowSize);
+
     else
             FourierAnalysis('ImageFileName', handles.ImageFileName{i}, 'MaskFileName', handles.MaskFileName{i}, 'SaveDir', handles.savedir,'Scale',handles.sc,...
         'Threshold',handles.Threshold,'WindowSize',handles.WindowSize);
 
     end
+  
     end
 guidata(hObject, handles)
 
@@ -183,6 +185,7 @@ close(SA); clear SA;
 guidata(hObject, handles)
 
 function handles = findMasks(handles)
+
 handles.MaskFileName = {};
 handles.ImageFileName = {};
 counter = 0;

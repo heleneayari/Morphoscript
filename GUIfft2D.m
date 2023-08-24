@@ -52,7 +52,7 @@ set(0, 'defaultAxesTickLabelInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultTextInterpreter','latex');
 
-sz=get(groot,'ScreenSize');
+%sz=get(groot,'ScreenSize');
 
 set(handles.figure1,'Units','pixel')
 set(handles.figure1,'Position',[100 200 900 800])
@@ -170,7 +170,7 @@ guidata(hObject, handles);
 
 function pushbutton_angle_Callback(hObject, ~, handles)
 axes(handles.axes_angle);
-handles.FIA.MainDirection
+
 [x,~] = ginput(1);
 
 handles.FIA.calculateDirection(x);
@@ -178,6 +178,7 @@ handles.FIA.calculateDirection(x);
 handles = showDirection(handles);
 handles.FIA.calculateMainAnisotropicSize;
 handles.FIA.calculateOrthogonalAnisotropicSize;
+
 handles.w=handles.FIA.OrthogonalWavelength;
 handles = showOrthoAnisotropicSize(handles);
 handles = showFft(handles);

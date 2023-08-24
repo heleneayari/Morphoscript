@@ -1,0 +1,309 @@
+clear
+close all
+clc
+makePretty
+
+dossierfourier='Test_images/results/';
+
+
+nom{1}='myresult1.mat';
+nom{2}='myresult2.mat';
+load([dossierfourier,nom{1}]);
+
+ll=length(results);
+MP(:,1)=[results(:).MaskMicrons];
+%  MP(:,1)=[results(:).MaskPixels];
+OP(:,1)=[results(:).OtsuMicrons];
+C(:,1)=[results(:).Coverage];
+MII(:,1)=[results(:).MeanImageIntensity];
+MIM(:,1)=[results(:).MaxImageIntensity];
+MPI(:,1)=[results(:).MeanProteinIntensity];
+MBI(:,1)=[results(:).MeanBackCellIntensity];
+CP(:,1)=[results(:).Compactness];
+Ro(:,1)=[results(:).Roundness];
+Rc(:,1)=[results(:).Rectangularity];
+E(:,1)=ones(1,ll)-[results(:).Elongation];
+Ell(:,1)=[results(:).Ellipsoidal];
+Ecc(:,1)=[results(:).Eccentricity];
+
+
+
+
+
+nom{2}='20191121_pluri_ShapeAnalysis.mat';
+tp=true(ll,1);
+load([dossiershape,nom{2}]);
+
+ll2=length(results);
+tp2=false(ll2,1);
+tp=[tp;tp2];
+MP=[MP(:);[results(:).MaskMicrons]'];
+% MP=[MP(:);[results(:).MaskPixels]'];
+OP=[OP(:);[results(:).OtsuMicrons]'];
+C=[C(:);[results(:).Coverage]'];
+MII=[MII(:);[results(:).MeanImageIntensity]'];
+MIM=[MIM(:);[results(:).MaxImageIntensity]'];
+MPI=[MPI(:);[results(:).MeanProteinIntensity]'];
+MBI=[MBI(:);[results(:).MeanBackCellIntensity]'];
+CP=[CP(:);[results(:).Compactness]'];
+Ro=[Ro(:);[results(:).Roundness]'];
+Rc=[Rc(:);[results(:).Rectangularity]'];
+E=[E(:);1-[results(:).Elongation]'];
+Ell=[Ell(:);[results(:).Ellipsoidal]'];
+Ecc=[Ecc(:);[results(:).Eccentricity]'];
+
+MPI=MPI./MBI;
+MPI(MPI>13)=NaN;
+nom{3}=['20201001_B27_FourierAnalysis.mat'];
+load([dossierfourier,nom{3}])
+Order(:,1)=[results(:).order];
+stddis(:,1)=[results(:).dispersion];
+wl(:,1)=[results(:).wavelength];
+
+
+nom{4}=['20201001_pluri_FourierAnalysis.mat'];
+load([dossierfourier,nom{4}])
+Order=[Order(:);[results(:).order]'];
+stddis=[stddis(:);[results(:).dispersion]'];
+wl=[wl(:);[results(:).wavelength]'];
+
+
+
+
+
+% MP=MP(uu)./mean(MP(uu));
+% OP=OP(uu)./mean(OP(uu));
+% C=C(uu)./mean(C(uu));
+% M:=M:(uu)./mean(M:(uu));
+% MIM=MIM(uu)./mean(MIM(uu));
+% MPI=MPI(uu)./mean(MPI(uu));
+% CP=CP(uu)./mean(CP(uu));
+% Ro=Ro(uu)./mean(Ro(uu));
+% Rc=Rc(uu)./mean(Rc(uu));
+% E=E(uu)./mean(E(uu));
+% Ell=Ell(uu)./mean(Ell(uu));
+% Ecc=Ecc(uu)./mean(Ecc(uu));
+% stddis=stddis(uu)./mean(stddis(uu));
+% Order=Order(uu)./mean(Order(uu));
+% type=type(uu);
+%
+% MP=(MP-mean(MP))./std(MP);
+% OP=(OP-mean(OP))./std(OP);
+% C=(C-mean(C))./std(C);
+% M:=(M:-mean(M:))./std(M:);
+% MIM=(MIM-mean(MIM))./std(MIM);
+% MPI=(MPI-mean(MPI))./std(MPI);
+% CP=(CP-mean(CP))./std(CP);
+% Ro=(Ro-mean(Ro))./std(Ro);
+% Rc=(Rc-mean(Rc))./std(Rc);
+% E=(E-mean(E))./std(E);
+% Ell=(Ell-mean(Ell))./std(Ell);
+% Ecc=(Ecc-mean(Ecc))./std(Ecc);
+% stddis=(stddis-mean(stddis))./std(stddis);
+% Order=(Order-mean(Order))./std(Order);
+
+
+% %TT=table(MP,OP,C,M:,MIM,MPI,CP,Ro,Rc, E , Ell, Ecc,stddis,Order,Taille,type);
+% TT=table(MP,OP,stddis,Order,wl,MPI,tp);
+
+% ejec2=[43 2 39 12 42];
+
+ejec=[4 32 28 10 13 75 34 71 74 44];
+
+
+MPs=MP;
+MPs(ejec)=[];
+Cs=C;
+Cs(ejec)=[];
+Es=E;
+Es(ejec)=[];
+CPs=CP;
+CPs(ejec)=[];
+OPs=OP;
+OPs(ejec)=[];
+length(OPs)
+tps=tp;
+tps(ejec)=[];
+
+
+ind=tp;
+%% Fit gaussien des differents parametres
+% leg={'B27','pluri'}
+% numhist=4;
+% figure('Position',[570 270 800 405]);
+%
+% subaxis(1,numhist,1,'SpacingVert',0,'MR',0.05,'ML',0);
+% plot2histvert(Order,ind,'Order')
+%
+% subaxis(1,numhist,2);
+% plot2histvert(stddis,ind,'Dispersion')
+% subaxis(1,numhist,3);
+% plot2histvert(MPI,ind,'Mean Intensity')
+% subaxis(1,numhist,4);
+% plot2histvert(wl,ind,'Spacing')
+
+
+
+
+leg={'Pluricyte','Usual'};
+numhist=3;
+figure('Position',[570 270 800 405]);
+
+subaxis(1,numhist,1,'SpacingVert',0,'MR',0.05,'ML',0);
+plot2histvert(Order,ind,'Order',posleg)
+h = findobj(gca,'Type','histogram');
+legend(h,leg)
+subaxis(1,numhist,2);
+plot2histvert(stddis,ind,'Dispersion (radian)',posleg)
+
+subaxis(1,numhist,3);
+plot2histvert(wl,ind,'Spacing ($\mu m$)',posleg)
+
+
+%%
+leg={'Pluricyte','Usual'};
+numhist=4;
+figure('Position',[570 270 800 405]);
+subaxis(1,numhist,1,'SpacingVert',0.05,'MR',0.05,'ML',0);
+%plot2histvert(MPI,tp,'Area ($\mu m^2$)',posleg)
+plot2histvert(MPs,tps,'Area ($\mu m^2$)',posleg)
+h = findobj(gca,'Type','histogram');
+legend(h,leg)
+subaxis(1,numhist,2);
+plot2histvert(Cs,tps,'Coverage',posleg)
+subaxis(1,numhist,3);
+plot2histvert(Es,tps,'Elongation',posleg)
+subaxis(1,numhist,4);
+plot2histvert(CPs,tps,'Compactness',posleg)
+
+
+%% New complete figure
+leg={'Pluricyte','Usual'};
+numhist=4;
+posleg=-0.13;
+figure('Position',[570 270 800 405],'Name','Fi3stripy');
+figToolbarFix
+subaxis(2,numhist,1,'SpacingVert',0.1,'MR',0.05,'ML',0.05,'PaddingTop',-0.06,'PaddingBottom',0.02);
+%plot2histvert(MPI,tp,'Area ($\mu m^2$)',posleg)
+plot2histvert(MPs,tps,'Area ($\mu m^2$)',posleg)
+h = findobj(gca,'Type','histogram');
+legend(h,leg)
+subaxis(2,numhist,2);
+plot2histvert(CPs,tps,'Compactness',posleg)
+subaxis(2,numhist,3);
+plot2histvert(Es,tps,'Elongation',posleg)
+subaxis(2,numhist,4);
+plot2histvert(Cs,tps,'Coverage',posleg)
+
+posleg=-0.18
+subaxis(2,numhist,5,'SpacingVert',0.2,'MR',0.05,'ML',0.05,'PaddingBottom',0.02);
+plot2histvert(MPI,ind,'Protein Intensity',posleg)
+subaxis(2,numhist,6);
+
+plot2histvert(Order,ind,'Order',posleg)
+
+subaxis(2,numhist,7);
+plot2histvert(stddis,ind,'Dispersion (radian)',posleg)
+subaxis(2,numhist,8);
+plot2histvert(wl,ind,'Spacing ($\mu m$)',posleg)
+
+%%
+TT=table(MP,OP,stddis,Order,wl,MPI,E,tp);
+
+%% stepwise glm
+mdl=stepwiseglm(TT,'constant','upper','linear','Distribution','binomial');
+mdl2=fitglm(TT,'linear','Distribution','binomial');
+% figure
+% mdl.plotDiagnostics
+%% plot new histograms
+clear nvar
+AA=mdl.Coefficients;
+BB=mdl2.Coefficients;
+%nvar=AA{2,1}.*OP+AA{3,1}*M:+AA{4,1}.*MPI+AA{5,1}.*Order;
+%nvar=BB{2,1}.*MP+BB{3,1}*M:+BB{4,1}.*MPI+BB{5,1}.*stddis+BB{6,1}.*Order+BB{1,1};
+%nvar=AA{2,1}.*OP+AA{3,1}*M:+AA{4,1}.*MPI+AA{5,1}.*stddis+AA{6,1}.*Order+AA{7,1}.*Taille+AA{1,1};
+%nvar=AA{2,1}.*M:+AA{3,1}*MPI+AA{4,1}.*Order+AA{5,1}.*Taille+AA{1,1};
+
+
+mytable=table2array(mdl.Fitted);
+
+DataArray=nan(length(C),2);
+DataArray(1:sum(ind),1)=mytable(ind);
+DataArray(1:sum(~ind),2)=mytable(~ind);
+figure
+UnivarScatter(DataArray,'Label',{'B27','Pluri'});
+title('example 1')
+
+
+%% calculate p value
+clear p
+
+
+
+%
+p.CP = kruskalwallis(CP,tp,'off');
+p.C = kruskalwallis(Cs,tps,'off');
+p.Rc = kruskalwallis(Rc,tp,'off');
+p.Ro = kruskalwallis(Ro,tp,'off');
+p.E = kruskalwallis(E,tp,'off');
+p.Ell = kruskalwallis(Ell,tp,'off');
+p.Ecc = kruskalwallis(Ecc,tp,'off');
+% p.Org=kruskalwallis(Org,tp);
+p.MP = kruskalwallis(MPs,tps,'off');
+ranksum(MPs(tps),MPs(~tps))
+anova1(MPs,tps,'off')
+p.OP = kruskalwallis(OPs,tps);
+%  ranksum(OP(tps),OP(~tps))
+%  anova1(OPs,tps)
+p.MPI = kruskalwallis(MPI,tp,'off');
+p.Order = kruskalwallis(Order,tp,'off');
+%p.M: = kruskalwallis(M:,tp);
+p.stddis = kruskalwallis(stddis,tp,'off');
+p.wl= kruskalwallis(wl,tp,'off');
+% [h,p]= ttest2(Org(~tp),Org(tp))
+% [h,p]= ttest2(MP(~tp),MP(tp))
+% [h,p]= ttest2(M:(~tp),M:(tp))
+% DataArray=nan(length(MP),2);
+% DataArray(1:sum(ind),1)=Org(ind);
+% DataArray(1:sum(~ind),2)=Org(~ind);
+% figure
+% UnivarScatter(DataArray,'Label',{'B27','Pluri'});
+
+%% get mean values
+mm.Taille(1)=nanmedian(wl(tp));
+mm.Taille(2)=nanmedian(wl(~tp));
+mm.OP(1)=mean(OP(tp));
+mm.OP(2)=mean(OP(~tp));
+mm.MP(1)=mean(MPs(tps));
+mm.MP(2)=mean(MPs(~tps));
+mm.MP(1)=median(MPs(tps));
+mm.MP(2)=median(MPs(~tps));
+mm.MPI(1)=median(MPI(tp));
+mm.MPI(2)=median(MPI(~tp));
+mm.Taille2(1)=nanmean(wl(tp));
+mm.Taille2(2)=nanmean(wl(~tp));
+mm.C(1)=mean(Cs(tps));
+mm.C(2)=mean(Cs(~tps));
+mm.Ell(1)=median(Ell(tps));
+mm.Ell(2)=median(Ell(~tps));
+mm.CP(1)=median(CP(tp));
+mm.CP(2)=median(CP(~tp));
+mm.Order(1)=mean(Order(tp));
+mm.Order(2)=mean(Order(~tp));
+mm.stddis(1)=nanmedian(stddis(tp));
+mm.stddis(2)=nanmedian(stddis(~tp));
+mm
+%% get std
+nn=sum(tp);
+nn2=sum(~tp);
+[alpha,ff,titi]=mode(wl(tp));
+[beta,ff2,toto]=mode(wl(~tp));
+st.OP(1)=tinv(0.975,nn-1)*std(OPs(tps))/sqrt(nn);
+st.OP(2)=tinv(0.975,nn2-1)*std(OPs(~tps))/sqrt(nn2);
+st.MP(1)=tinv(0.975,nn-1)*std(MPs(tps))/sqrt(nn);
+st.CP(1)=tinv(0.975,nn-1)*std(CP(tp))/sqrt(nn);
+st.CP(2)=tinv(0.975,nn2-1)*std(CP(~tp))/sqrt(nn2);
+st.MP(2)=tinv(0.975,nn2-1)*std(MPs(~tps))/sqrt(nn2);
+
+
+
