@@ -12,10 +12,8 @@ https://doi.org/10.1093/bioinformatics/btab400
 Install
 =======
 
-There are two ways you can use morphoscript:
-+ Install the application using the install app icon in the APPS menu of matlab : click Install app, and select the morphoscript application in your installed folder.
-+ run the files using script  (see script_example.m)
-After downloading the project, 
+After downloading the project, to start the application plesase run  the file  script_example.m.
+ 
 
 Quick start
 ===========
